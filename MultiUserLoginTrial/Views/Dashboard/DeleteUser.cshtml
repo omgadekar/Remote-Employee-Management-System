@@ -1,0 +1,61 @@
+﻿@model Users
+
+<main class="container mt-3">
+	<div class="row">
+		<div class="col-3"></div>
+		<div class="col-6 border">
+			@{
+				if (!string.IsNullOrEmpty(ViewBag.Error))
+				{
+					<div class="alert alert-danger">
+						@ViewBag.Error
+					</div>
+				}
+			}
+			<form method="post">
+				<p class="h3"><i class="bi bi-pencil-square"></i> Edit Details</p>
+				<hr>
+				<div>
+					<label asp-for="UId" class="form-label">User ID :</label>
+					<input asp-for="UId" type="text" class="form-control" required readonly />
+					<span asp-validation-for="UId" class="text-danger"></span>
+				</div>
+				<div>
+					<label asp-for="UserName" class="form-label">User Name :</label>
+					<input asp-for="UserName" type="text" class="form-control" required readonly />
+					<span asp-validation-for="UserName" class="text-danger"></span>
+				</div>
+				<div>
+					<label asp-for="UserEmail" class="form-label">User Email :</label>
+					<input asp-for="UserEmail" type="email" class="form-control" required readonly />
+					<span asp-validation-for="UserEmail" class="text-danger"></span>
+				</div>
+				<div>
+					<label asp-for="UserPassword" class="form-label">User Password</label>
+					<input asp-for="UserPassword" type="text" class="form-control" required readonly />
+					<span asp-validation-for="UserPassword" class="text-danger"></span>
+				</div>
+				<div>
+					<label asp-for="UserDesignation" class="form-label">User Designation</label>
+					<input asp-for="UserDesignation" type="text" class="form-control" required readonly />
+					<span asp-validation-for="UserDesignation" class="text-danger"></span>
+				</div>
+				<div>
+					<label asp-for="UserCity" class="form-label">User City</label>
+					<input asp-for="UserCity" type="text" class="form-control" required readonly />
+					<span asp-validation-for="UserCity" class="text-danger"></span>
+				</div>
+				<div>
+					<label asp-for="IsActive" class="form-label">Is Active(0/1) :</label>
+					<input asp-for="IsActive" type="text" class="form-control" required readonly />
+					<span asp-validation-for="IsActive" class="text-danger"></span>
+				</div>
+				<div class="p-2">
+					<button type="submit" class="btn btn-danger">Delete</button>
+				</div>
+			</form>
+		</div>
+		<div class="col-3"></div>
+	</div>
+
+</main>

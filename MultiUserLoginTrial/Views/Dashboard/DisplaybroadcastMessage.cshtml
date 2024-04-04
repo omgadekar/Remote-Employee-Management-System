@@ -1,0 +1,39 @@
+﻿@model List<MultiLogin.Models.Broadcastmessage>;
+<style>
+    .container-sm{
+    width:95%;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2">
+            @Html.Partial("_UserSidebar")
+        </div>
+        <div class="col-8">
+            <div class="container-sm">
+                <div class="d-flex justify-content-center mt-3">
+                    <h2 class="text-primary"><b>Announcements</b></h2>
+                </div>
+
+                <div class="row mt-4 p-3 d-flex justify-content-center">
+                @foreach (var data in Model)
+                {
+                        <div class="col-md-4 mb-4">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">@data.messageheading</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">@data.broadcastDate.ToString(@"dd-MM-yyyy hh\:mm\:ss tt")</h6>
+                            <p class="card-text">@data.Message</p>
+                        </div>
+                    </div>
+                    </div>
+                }
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            @Html.Partial("TrackedPage")
+        </div>
+    </div>
+
+</div>

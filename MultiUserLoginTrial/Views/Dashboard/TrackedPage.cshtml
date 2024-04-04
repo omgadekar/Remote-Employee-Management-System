@@ -1,0 +1,458 @@
+﻿@* @model Users
+@Html.Partial("_Sidebar")
+<style>
+    body {
+        background-color: #f5f5f5; /* Light gray background */
+        margin: 50px;
+        font-family: Arial, sans-serif;
+    }
+
+    .stopwatch {
+        text-align: center;
+    }
+
+    .circle {
+        border: 4px solid black;
+        border-radius: 50%;
+        width: 200px;
+        height: 200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .time {
+        font-size: 40px;
+        font-weight: bold;
+    }
+
+    .controls {
+        margin-top: 20px;
+    }
+
+    .buttonPlay,
+    .buttonPause,
+    .buttonReset {
+        font-size: 16px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .buttonPlay:hover,
+        .buttonPause:hover,
+        .buttonReset:hover {
+            background-color: indigo;
+            color: white;
+        }
+
+    .gold {
+        color: black;
+    }
+
+    .centered {
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .button-container {
+        text-align: center;
+    }
+
+        .button-container button {
+            margin: 5px;
+        }
+</style>
+<div class="stopwatch">
+
+<h1><span class="gold">TimeSheet</span>Tracker</h1>
+<div class="circle">
+    <span class="time" id="elapsedTime">00:00:00</span>
+</div>
+<p><h5>Today's Total Time: <span id="todaysTotalTime">00:00:00</span></h5></p>
+<div class="row" >
+    <div class="col-md-12">
+        <div class="float-lg-end mt-2">
+            <button id="startButton" class="btn btn-outline-success">Start Time</button>
+            <button id="stopButton" class="btn btn-outline-danger" disabled>Stop Time</button>
+            <button id="DashboardButton" onclick="logout" class="btn btn-outline-primary">Dashborad</button> 
+          
+        </div>
+    </div>
+</div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    @section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
+}
+
+<!--CODE SUCCESSFULLY WORKING 01/02/2024 AS PER REQUIREMENT-->
+
+@{
+    int UserID = Context.Session.GetInt32("_UserID") ?? 0;
+}
+<script>
+    var startTime;
+    var isTracking = false;
+    var elapsedMilliseconds = 0;
+    var userId = "@UserID"; // Assuming you have a unique user identifier in your model
+
+    // Load elapsed time from localStorage
+    if (localStorage.getItem("elapsedTime" + userId)) {
+        elapsedMilliseconds = parseInt(localStorage.getItem("elapsedTime" + userId));
+        startTracking();
+
+    }
+
+    function startTracking() {
+        startTime = new Date().getTime();
+        isTracking = true;
+        document.getElementById("startButton").disabled = true;
+        document.getElementById("stopButton").disabled = false;
+        localStorage.setItem("startTime" + userId, startTime.toString());
+        $.ajax({
+
+            url: '@Url.Action("UpdateFlagValue", "Dashboard")',
+            type: 'POST',
+            data: { start: "true", stored: "false" },
+            success: function () {
+                // Do something on success if needed
+            },
+            error: function () {
+                console.error('Error updating elapsed time on the server.');
+            }
+        });
+        //alert("Tracking has started.");
+    }
+
+    function stopTracking() {
+        if (isTracking) {
+            isTracking = false;
+            elapsedMilliseconds += new Date().getTime() - startTime;
+            // Send the elapsed time to the server
+            $.ajax({
+                url: '@Url.Action("StopTracking", "Dashboard")',
+                type: 'POST',
+                data: { elapsedMilliseconds: elapsedMilliseconds },
+                success: function () {
+                    // Do something on success if needed
+                },
+                error: function () {
+                    console.error('Error updating elapsed time on the server.');
+                }
+            });
+            $.ajax({
+
+                url: '@Url.Action("UpdateFlagValue", "Dashboard")',
+                type: 'POST',
+                data: { start: "false", stored: "false" },
+                success: function () {
+                    // Do something on success if needed
+                },
+                error: function () {
+                    console.error('Error updating elapsed time on the server.');
+                }
+            });
+            // Store elapsed time in localStorage
+            localStorage.setItem("elapsedTime" + userId, elapsedMilliseconds.toString());
+            document.getElementById("startButton").disabled = false;
+            document.getElementById("stopButton").disabled = true;
+        }
+    }
+    function updateElapsedTime() {
+        var currentTime = new Date().getTime();
+        var currentElapsed = isTracking ? elapsedMilliseconds + (currentTime - startTime) : elapsedMilliseconds;
+        var hours = Math.floor(currentElapsed / 3600000);
+        var minutes = Math.floor((currentElapsed % 3600000) / 60000);
+        var seconds = Math.floor((currentElapsed % 60000) / 1000);
+
+        var elapsedTimeString = pad(hours, 2) + ":" + pad(minutes, 2) + ":" + pad(seconds, 2);
+        document.getElementById("elapsedTime").innerText = elapsedTimeString;
+    }
+    function redirectToUserInformation() {
+        debugger;
+        //alert("Welcome successful.");
+        window.location.href = '@Url.Action("UserInformation", "Dashboard")';
+    }
+
+
+    //ADDED
+    function updateTotalHours() {
+        $.ajax({
+            url: '@Url.Action("GetTotalHours", "Dashboard")',
+            type: 'GET',
+            success: function (totalHours) {
+                // Use the correct ID based on your actual HTML structure
+                var totalHoursElement = $("#totalHours");
+
+                if (totalHoursElement.length) {
+                    totalHoursElement.text(totalHours);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error updating total hours:', error);
+            }
+        });
+    }
+    function logout() {
+       
+
+        console.log("LOGOUT FROM TRACKED PAGE CALLED")
+
+              // Stop tracking and calculate total elapsed time
+        stopTracking();
+        localStorage.removeItem('elapsedTime' + userId);
+        console.log(localStorage);
+        // Send the elapsed time to the server
+        
+        $.ajax({
+
+            url: '@Url.Action("UpdateElapsedTime", "Dashboard")',
+            type: 'POST',
+            data: { elapsedMilliseconds: elapsedMilliseconds },
+            success: function () {
+                // Do something on success if needed
+            },
+            error: function () {
+                console.error('Error updating elapsed time on the server.');
+            }
+        });
+        $.ajax({
+
+            url: '@Url.Action("UpdateFlagValue", "Dashboard")',
+            type: 'POST',
+            data: { start: "false", stored: "false" },
+            success: function () {
+                // Do something on success if needed
+            },
+            error: function () {
+                console.error('Error updating elapsed time on the server.');
+            }
+        });
+        var totalHours = elapsedMilliseconds / (1000 * 60 * 60);
+        updateTotalHours(totalHours);
+        redirectToUserInformation();
+
+    };
+
+
+    function pad(num, size) {
+        var s = "000000000" + num;
+        return s.substr(s.length - size);
+    }
+    //ADDITION AT 6-05PM 01/02 to handle accidental clousers
+ 
+    window.addEventListener('beforeunload', function (event) {
+        if (isTracking) {
+            var currentTime = new Date().getTime();
+            elapsedMilliseconds += currentTime - startTime;
+            $.ajax({
+                url: '/Dashboard/SetElapsedTimeToSession',
+                type: 'POST',
+                data: { elapsedMilliseconds: elapsedMilliseconds },
+                success: function (response) {
+                    // Do something with the response if needed
+                }
+            });
+            localStorage.setItem("elapsedTime" + userId, elapsedMilliseconds.toString());
+
+        }
+    });
+
+    //
+    document.getElementById("startButton").addEventListener("click", startTracking);
+    document.getElementById("stopButton").addEventListener("click", stopTracking);
+    document.getElementById("DashboardButton").addEventListener("click", logout);
+
+
+    setInterval(updateElapsedTime, 1000); // update every second
+    updateElapsedTime();
+    $(document).ready(function () {
+        if (localStorage.getItem("exitTime" + userId)) {
+            var exitTime = localStorage.getItem("exitTime" + userId);
+            var currentTime = new Date().getTime();
+            elapsedMilliseconds += currentTime - exitTime;
+            localStorage.setItem("elapsedTime" + userId, elapsedMilliseconds.toString());
+            localStorage.removeItem("exitTime" + userId);
+            $.ajax({
+
+                url: '@Url.Action("UpdateFlagValue", "Dashboard")',
+                type: 'POST',
+                data: { start: "true", stored: "false" },
+                success: function () {
+                    // Do something on success if needed
+                },
+                error: function () {
+                    console.error('Error updating elapsed time on the server.');
+                }
+            });
+        }
+        // Check if the timer was running
+        $.ajax({
+            url: '@Url.Action("GetTodaysTotalHours", "Dashboard")',
+            type: 'GET',
+            data: { userId: userId },
+            success: function (todaysTotalHours) {
+                var todaysTotalHoursElement = $("#todaysTotalTime");
+
+                if (todaysTotalHoursElement.length) {
+                    todaysTotalHoursElement.text(todaysTotalHours);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error updating today\'s total hours:', error);
+            }
+        });
+    });
+</script> *@
+
+<style>
+
+
+h1 {
+    margin: 10px 0 0 20px;
+    user-select: none;
+}
+
+
+    #maincontainer {
+        background: #334756;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+   
+    padding: 25px;
+    border-radius: 5px;
+}
+
+.time {
+    font-size: 5rem;
+    margin-bottom: 10px;
+    user-select: none;
+}
+
+.controls button {
+    background-color: #FF4C29;
+    margin: 10px 5px;
+    padding: 10px 20px 10px 20px;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: none;
+    transition: 0.8s;
+    cursor: pointer;
+}
+
+.controls button:hover {
+    background-color: transparent;
+    color: whitesmoke;
+}
+    #maincontainer {
+        max-width: 200px;
+    }
+    .time {
+        font-size: 2rem;
+    }
+    .controls button {
+        padding: 5px;
+        margin: 0.5px;
+    }
+
+</style>
+<div class="container" id="maincontainer">
+    <div class="time" id="stopwatch" style=" color: whitesmoke;">
+        00:00:00
+    </div>
+
+    <div class="controls">
+        <button class="bg-success" onclick="startStopwatch()">Start</button>
+        <button onclick="stopStopwatch()">Stop</button>
+       
+    </div>
+
+</div>
+@{
+    int UserID = Context.Session.GetInt32("_UserID") ?? 0;
+}
+<script>
+    var displayTime;    
+    var userId = "@UserID";
+    var startTime; // to keep track of the start time
+    var stopwatchInterval; // to keep track of the interval - Flag
+    var elapsedPausedTime = 0; // to keep track of the elapsed time while stopped
+
+    function startStopwatch() {
+        if (!stopwatchInterval) {
+            startTime = new Date().getTime() - elapsedPausedTime; // get the starting time by subtracting the elapsed paused time from the current time
+            stopwatchInterval = setInterval(updateStopwatch, 1000); // update every second
+        }
+    }
+
+    function stopStopwatch() {
+        clearInterval(stopwatchInterval); // stop the interval
+        elapsedPausedTime = new Date().getTime() - startTime; // calculate elapsed paused time
+        stopwatchInterval = null; // reset the interval variable
+    }
+
+    function resetStopwatch() {
+        stopStopwatch(); // stop the interval
+        elapsedPausedTime = 0; // reset the elapsed paused time variable
+        document.getElementById("stopwatch").innerHTML = "00:00:00"; // reset the display
+    }
+
+    function updateStopwatch() {
+        var currentTime = new Date().getTime(); // get current time in milliseconds
+        var elapsedTime = currentTime - startTime; // calculate elapsed time in milliseconds
+        var seconds = Math.floor(elapsedTime / 1000) % 60; // calculate seconds
+        var minutes = Math.floor(elapsedTime / 1000 / 60) % 60; // calculate minutes
+        var hours = Math.floor(elapsedTime / 1000 / 60 / 60); // calculate hours
+         displayTime = pad(hours) + ":" + pad(minutes) + ":" + pad(seconds); // format display time
+        document.getElementById("stopwatch").innerHTML = displayTime; // update the display
+    }
+    var logoutflag = 0;
+    const element = document.getElementById("logoutbtn");
+    element.addEventListener("click", logout);
+    function logout() {
+        logoutflag = 1;
+        if (logoutflag == 1) {
+            stopStopwatch();
+            localStorage.removeItem("elapsedTime" + userId);
+            $.ajax({
+
+                url: '@Url.Action("Logout", "Dashboard")',
+                type: 'POST',
+                data: {displayTime:elapsedPausedTime},
+                success: function (result) {
+                    window.location.href = result.redirectUrl;
+                },
+                error: function () {
+                    console.error();
+                }
+            });
+        }
+    }
+    function pad(number) {
+        // add a leading zero if the number is less than 10
+        return (number < 10 ? "0" : "") + number;
+    }
+    window.addEventListener("beforeunload", function (event) {
+        if (logoutflag == 0) {
+            stopStopwatch();
+            if (elapsedPausedTime > 0) {
+                localStorage.setItem("elapsedTime" + userId, elapsedPausedTime.toString());
+            }
+        }
+    });
+    window.onload = function() {
+        if (localStorage.getItem("elapsedTime" + userId) ) {
+            elapsedPausedTime = localStorage.getItem("elapsedTime" + userId);
+            startStopwatch();
+        }
+    };
+
+</script>

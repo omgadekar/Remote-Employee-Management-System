@@ -1,0 +1,60 @@
+﻿@model List<MultiLogin.Models.UserTime>
+@{
+    ViewBag.Title = "UserInformation";
+    var todaysRecords = Model.Where(record => record.LogoutTime.Date == DateTime.Today).ToList();
+    long totalDuration = todaysRecords.Sum(record => Convert.ToInt64(record.Duration));
+    TimeSpan totalWorkedTime = TimeSpan.FromMilliseconds(totalDuration);
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2">
+            @Html.Partial("_UserSidebar")
+        </div>
+        <div class="col-8">
+            <div class="d-flex justify-content-center mt-4 text-primary">
+                <h2><b>TimeSheet</b></h2>
+                
+
+            </div>
+            <div class="d-flex justify-content-center mt-2 text-primary fw-bold">Total time worked today: @totalWorkedTime.ToString(@"hh\:mm\:ss")</div>
+            <div class="row border-1 mt-2">
+                <div class="col-1"></div>
+                <div class="col-10 border border-1">
+                    <span class="text-primary m-2"><b>Previous Time Records</b></span>
+                    @if(Model.Count >   0){
+                    <table class="table border border-1">
+                        <thead>
+                            <tr>
+                                <th>Login Time</th>
+                                <th>Logout Time</th>
+                                <th>Working Hours</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var record in Model)
+                            {
+                                <tr>
+                                    <td>@record.LoginTime</td>  
+                                    <td>@record.LogoutTime</td>
+                                    <td>@TimeSpan.FromMilliseconds(Convert.ToInt64(@record.Duration)).ToString(@"hh\:mm\:ss")</td>
+                                </tr>
+                            }
+                        </tbody>
+                        </table>
+                    }
+
+                    else{
+                        <div class="d-flex justify-content-sm-center">
+                        <p >No Records</p>
+                        </div>
+                    }
+                </div>
+                <div class="col-1 "></div>
+            </div>
+        </div>
+        <div class="col-2 align-items-end">
+            
+            @Html.Partial("TrackedPage")
+        </div>
+    </div>
+</div>

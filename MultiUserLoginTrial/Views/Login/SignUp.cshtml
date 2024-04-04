@@ -1,0 +1,72 @@
+﻿<section class=" d-flex justify-content-center">
+    <!-- Jumbotron -->
+    <div class="px-4 py-5 px-md-5 text-center text-lg-start">
+        <div class="container">
+            <div class="row gx-lg-5 align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <p class="my-5 fw-bold text-center">
+                        <span class="text-primary" style="font-size:6vh"> <img src="~/Logo.png" height="50px" />
+                            FlexiSphere </span> <br />
+                         Join FlexiSphere today and take control of your time tracking and<br /> team collaboration effortlessly.
+                    </p>
+
+                </div>
+
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <div class="card">
+                        <div class="card-body py-5 px-md-5">
+                            <form method="post">
+                                @{
+                                    if (!string.IsNullOrEmpty(ViewBag.Error))
+                                    {
+                                        <div class="alert alert-danger">
+                                            @ViewBag.Error
+                                        </div>
+                                    }
+                                }
+
+                                <!-- Email input -->
+                                <div class="form-floating mb-3">
+                                    <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="emailaddress">
+                                    <label for="floatingInput">Email address</label>
+                                </div>
+                                <!-- Submit button -->
+                                <button type="submit" class="btn btn-primary btn-block mb-4">
+                                    Sign up
+                                </button>
+                                <span class="text-primary"p>By clicking submit you agree to be contacted via email</p></span>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Jumbotron -->
+</section>
+<!-- Section: Design Block -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Add Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var RequestsuccessMessage = '@TempData["UserRequestSuccessMessage"]';
+        var RequesterrorMessage = '@TempData["UserRequestErrorMessage"]';
+
+        if (RequestsuccessMessage) {
+            toastr.success(RequestsuccessMessage);
+        }
+        if (RequesterrorMessage) {
+            toastr.error(RequesterrorMessage);
+        }
+    });
+
+
+</script>

@@ -1,0 +1,77 @@
+﻿@model Admin
+
+<main class="container mt-4">
+	<div class="row">
+		<div class="col-3"></div>
+		<div class="col-6 border">
+			@{
+				if (!string.IsNullOrEmpty(ViewBag.Error))
+				{
+					<div class="alert alert-danger">
+						@ViewBag.Error
+					</div>
+				}
+			}
+			<form method="post">
+				<p class="h3"><i class="bi bi-pencil-square"></i> Edit Details</p>
+				<hr>
+				<div>
+					<label asp-for="AId" class="form-label">Admin ID :</label>
+					<input asp-for="AId" type="text" class="form-control" required readonly />
+					<span asp-validation-for="AId" class="text-danger"></span>
+				</div>
+				<div>
+					<label asp-for="OrganizationName" class="form-label">Organization Name</label>
+					<input asp-for="OrganizationName" type="text" class="form-control" required />
+					<span asp-validation-for="OrganizationName" class="text-danger"></span>
+				</div>
+				<div>
+					<label asp-for="AdminName" class="form-label">Admin Name</label>
+					<input asp-for="AdminName" type="text" class="form-control" required />
+					<span asp-validation-for="AdminName" class="text-danger"></span>
+				</div>
+				<div>
+					<label asp-for="AdminEmail" class="form-label">Admin Email :</label>
+					<input asp-for="AdminEmail" type="email" class="form-control" required />
+					<span asp-validation-for="AdminEmail" class="text-danger"></span>
+				</div>
+				<div>
+					<label asp-for="AdminPassword" class="form-label">Admin Password</label>
+					<input asp-for="AdminPassword" type="text" class="form-control" required />
+					<span asp-validation-for="AdminPassword" class="text-danger"></span>
+				</div>
+				<div>
+					<label asp-for="AdminCity" class="form-label">City</label>
+					<input asp-for="AdminCity" type="text" class="form-control" required />
+					<span asp-validation-for="AdminCity" class="text-danger"></span>
+				</div>
+				<div>
+					<label asp-for="IsActive" class="form-label">Is Active(0/1) :</label>
+					<input asp-for="IsActive" type="text" class="form-control" required />
+					<span asp-validation-for="IsActive" class="text-danger"></span>
+				</div>
+				<div class="p-2">
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</div>
+			</form>
+		</div>
+		<div class="col-3"></div>
+	</div>
+
+</main>
+<script>
+	window.onload = function () {
+		generatePassword('AdminPassword');
+
+	}
+
+	function generatePassword(inputId) {
+		var length = 8,
+			charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+			retVal = "";
+		for (var i = 0, n = charset.length; i < length; ++i) {
+			retVal += charset.charAt(Math.floor(Math.random() * n));
+		}
+		document.getElementById(inputId).value = retVal;
+	}
+</script>

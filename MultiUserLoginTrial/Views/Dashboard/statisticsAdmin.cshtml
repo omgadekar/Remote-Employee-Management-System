@@ -1,0 +1,82 @@
+﻿@model MultiUserLoginTrial.ViewModels.StatDataAdmin
+<style>
+    .container-sm {
+        max-width: 95%;
+    }
+</style>
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-2">
+            @Html.Partial("_Sidebar")
+        </div>
+        <div class="col-10">
+            <div class="d-flex justify-content-center mt-4">
+                <h3 class="text-primary"><u>Statistical Data</u></h3>
+            </div>
+            <div class="mt-4" style="margin-left:50px;margin-right:50px">
+                <h4>Employee Data:</h4>
+             
+            </div>
+            <div class="container-sm mt-5">
+
+                <div>
+                    <canvas width="600" height="400" id="myChart"></canvas>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    function getRandomColor(existingColors) {
+        var color, isTooClose;
+        do {
+            color = 'rgba(' +
+                Math.floor(Math.random() * 256) + ', ' +
+                Math.floor(Math.random() * 256) + ', ' +
+                Math.floor(Math.random() * 256) + ', 0.2)';
+            isTooClose = existingColors.some(function (existingColor) {
+                var colorParts = color.match(/\d+/g).map(Number);
+                var existingColorParts = existingColor.match(/\d+/g).map(Number);
+                var diffR = Math.abs(colorParts[0] - existingColorParts[0]);
+                var diffG = Math.abs(colorParts[1] - existingColorParts[1]);
+                var diffB = Math.abs(colorParts[2] - existingColorParts[2]);
+                return (diffR + diffG + diffB) < 100;  // Adjust this value to your liking
+            });
+        } while (isTooClose);
+        return color;
+    }
+
+    var backgroundColors = [];
+    var borderColors = [];
+    for (var i = 0; i < @Model.RoleAndCount.Count; i++) {
+        var color = getRandomColor(backgroundColors);
+        backgroundColors.push(color);
+        borderColors.push(color.replace('0.2', '1'));
+    }
+
+    var myChart = new Chart(ctx, {
+        type: 'bar', // Change this line
+        data: {
+            labels: @Html.Raw(Json.Serialize(Model.Roles)),
+            datasets: [{
+                label: '# of Employees',
+                data: @Html.Raw(Json.Serialize(Model.RoleAndCount.Select(x => x.Item2))),
+                backgroundColor: backgroundColors,
+                borderColor: borderColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+</script>   

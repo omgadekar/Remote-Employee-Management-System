@@ -1,0 +1,58 @@
+﻿@model List<MultiUserLoginTrial.ViewModels.UserTimeAdminViewModel>;
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2">
+            @Html.Partial("_Sidebar")
+        </div>
+        <div class="col-10">
+            <style>
+                .hiddenRow {
+                    padding: 0 !important;
+                }
+
+                .container-sm {
+                    max-width: 95%;
+                }
+            </style>
+            <div class="container-sm border mt-4" style="overflow-y: auto; max-height: 100%; scrollbar-width: thin;">
+
+                <div class="card">
+                    <div class="d-flex justify-content-center">
+
+
+                        <div class=" p-2 text-primary fw-bold" style="font-size:1.0em">Employee Time Sheet</div>
+
+
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Designation</th>
+                                    <th>City</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var employee in Model)
+                                {
+                                    
+                                    <tr>
+                                        <td>@employee.UserName</td>
+                                        <td>@employee.UserDesgination</td>
+                                        <td>@employee.UserEmail</td>
+                                        <td>@TimeSpan.FromMilliseconds(Convert.ToInt64(employee.elapsedTime)).ToString(@"hh\:mm\:ss")</td>
+                                    </tr>
+                                    
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

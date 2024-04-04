@@ -1,0 +1,101 @@
+﻿
+    @model LoginData
+    @{
+        ViewBag.Title = "Login";
+    }
+    <style>
+   .divider:after,
+.divider:before {
+content: "";
+flex: 1;
+height: 1px;
+background: #eee;
+}
+.h-custom {
+height: calc(100% - 73px);
+}
+
+}
+
+
+    </style>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+
+<section class="vh-75 p-5" >
+    <div class="container-fluid h-custom">
+        <div class="row d-flex justify-content-center align-items-center h-75">
+            <div class="col-md-9 col-lg-6 col-xl-5">
+                <span style="font-size:4vh"><img src="~/Logo.png" height="50vh" width="50vh"/> <b>FlexiSphere</b></span><Br />
+              
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+                     class="img-fluid" alt="Sample image">
+            </div>
+            <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                <span style="font-size:4vh"><b>Sign in to Your FlexiSphere</b></span>
+                <form method="post">
+                    @{
+                        if (!string.IsNullOrEmpty(ViewBag.Error))
+                        {
+                            <div class="alert alert-danger">
+                                @ViewBag.Error
+                            </div>
+                        }
+                    }
+               
+            
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" asp-for="EnteredEmail" required>
+                        <label for="floatingInput">Email address</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password" asp-for="EnteredPassword" required>
+                        <label for="floatingPassword">Password</label>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <!-- Checkbox -->
+                        <button type="submit" class="btn btn-primary btn-lg"
+                                style="padding-left: 2.5rem; padding-right: 2.5rem;">
+                            Log in
+                        </button>
+                        <a href="#!" class="text-body">Forgot password?</a>
+                    </div>
+
+                    <div class="text-center text-lg-start mt-4 ">
+                      
+                        <p class="small fw-bold mt-2 pt-1 mb-0">
+                            Don't have an account? <a asp-action="SignUp" asp-controller="Login"
+                                                      class="link-primary">Register</a>
+                        </p>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+ 
+</section>
+
+    <!-- Section: Design Block -->
+
+    <script>
+    
+        function togglePasswordVisibility() {
+            var passwordInput = document.getElementById("form3Example4");
+            var passwordToggleIcon = document.getElementById("passwordToggle");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                passwordToggleIcon.classList.remove("fa-eye");
+                passwordToggleIcon.classList.add("fa-eye-slash");
+            } else {
+                passwordInput.type = "password";
+                passwordToggleIcon.classList.remove("fa-eye-slash");
+                passwordToggleIcon.classList.add("fa-eye");
+            }
+        }
+    </script>

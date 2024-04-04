@@ -1,0 +1,67 @@
+﻿<div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width:280px;">
+	<a class="d-flex align-items-center link-dark text-decoration-none">
+		<span class="fs-4 text-primary">Menu</span>
+	</a>
+	<hr>
+	<ul class="nav nav-pills flex-column mb-auto">
+		<li class="nav-item">
+			@if (Context.Session.GetString("Role") == "SuperAdmin")
+			{
+				<a class="nav-link active" asp-action="SuperAdminDashboard" asp-controller="Dashboard" aria-current="page" style="font-size:2.5vh;">
+					<i class="fa-solid fa-house-user" style="font-size:3vh">&nbsp; &nbsp;</i>Dashboard
+				</a>
+			}
+			else if (Context.Session.GetString("Role") == "Admin")
+			{
+				
+				<a class="nav-link active" asp-action="AdminDashboard" asp-controller="Dashboard" aria-current="page" style="font-size:2.5vh;">
+					<i class="fa-solid fa-house-user" style="font-size:3vh">&nbsp; &nbsp;</i>Dashboard
+				</a>
+			}
+
+		</li>
+		<li class="nav-item">
+			<a class="nav-link active" asp-action="BrowseScreenshots" asp-controller="Dashboard" aria-current="page" style="font-size:2.5vh;">
+				<i class="fa-solid fa-desktop" style="font-size:3vh">&nbsp; &nbsp;</i>Screenshots
+			</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link active" asp-action="ViewUrls" asp-controller="Dashboard" aria-current="page" style="font-size:2.5vh;">
+				<i class="fa-solid fa-magnifying-glass"  style="font-size:3vh">&nbsp; &nbsp;</i>URLs
+			</a>
+		</li>
+		<li class="nav-item">
+			@if (Context.Session.GetString("Role") == "SuperAdmin")
+			{
+				<a class="nav-link active" asp-action="statisticsSuperAdmin" asp-controller="Dashboard" aria-current="page" style="font-size:2.5vh;">
+					<i class="fa-solid fa-chart-pie" style="font-size:3vh">&nbsp; &nbsp;</i>Statistics
+				</a>
+			}else if (Context.Session.GetString("Role") == "Admin")
+			{
+				<a class="nav-link active" asp-action="statisticsAdmin" asp-controller="Dashboard" aria-current="page" style="font-size:2.5vh;">
+					<i class="fa-solid fa-chart-pie" style="font-size:3vh">&nbsp; &nbsp;</i>Statistics
+				</a>
+			}
+		</li>
+		@if (Context.Session.GetString("Role") == "Admin")
+		{
+			<li>
+				<a class="nav-link active" asp-action="broadcastMessage" asp-controller="Dashboard" aria-current="page" style="font-size:2.5vh;">
+					<i class="fa-solid fa-tower-broadcast" style="font-size:3vh">&nbsp; &nbsp;</i>Broadcast
+				</a>
+			</li>
+			<li>
+				<a class="nav-link active" asp-action="AdminViewLeaveRequest" asp-controller="Dashboard" aria-current="page" style="font-size:2.5vh;">
+					<i class="fa-solid fa-mug-hot" style="font-size:3vh">&nbsp; &nbsp;</i>Leave Requests
+				</a>
+			</li>
+			<li>
+				<a class="nav-link active" asp-action="AdminTimeSheet" asp-controller="Dashboard" aria-current="page" style="font-size:2.5vh;">
+					<i class="fa-solid fa-clock	" style="font-size:3vh">&nbsp; &nbsp;</i>Time Sheet
+				</a>
+			</li>
+		}
+	</ul>
+	<hr>
+	
+</div>

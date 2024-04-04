@@ -1,0 +1,75 @@
+﻿@model Users
+@{
+	int AdminID = Context.Session.GetInt32("_AdminID") ?? 0;
+}
+<main class="container mt-4">
+	<div class="row">
+		<div class="col-3"></div>
+		<div class="col-6 border">
+			@{
+				if (!string.IsNullOrEmpty(ViewBag.Error))
+				{
+					<div class="alert alert-danger">
+						@ViewBag.Error
+					</div>
+				}
+			}
+			<form method="post">
+				<p class="h3"><i class="bi bi-pencil-square"></i> Enter User Details</p>
+				<hr>
+				<div>
+					<label asp-for="UserName" class="form-label">User Name :</label>
+					<input asp-for="UserName" type="text" class="form-control" required />
+					<span asp-validation-for="UserName" class="text-danger"></span>
+				</div>
+				<div>
+					<label asp-for="UserEmail" class="form-label">User Email :</label>
+					<input asp-for="UserEmail" type="email" class="form-control" required />
+					<span asp-validation-for="UserEmail" class="text-danger"></span>
+				</div>
+				<div>
+					<label asp-for="UserPassword" class="form-label">User Password</label>
+					<input asp-for="UserPassword" type="password" class="form-control" id="UserPassword" required />
+					<span asp-validation-for="UserPassword" class="text-danger"></span>
+				</div>
+				<div>
+					<label asp-for="UserDesignation" class="form-label">User Designation :</label>
+					<input asp-for="UserDesignation" type="text" class="form-control" required />
+					<span asp-validation-for="UserDesignation" class="text-danger"></span>
+				</div>
+				<div>
+					<label asp-for="UserCity" class="form-label">User City :</label>
+					<input asp-for="UserCity" type="text" class="form-control" required />
+					<span asp-validation-for="UserCity" class="text-danger"></span>
+				</div>
+				<div>
+					<label asp-for="IsActive" class="form-label">Is Active(0/1) :</label>
+					<input asp-for="IsActive" type="text" class="form-control" required />
+					<span asp-validation-for="IsActive" class="text-danger"></span>
+				</div>
+			
+				<div class="p-2">
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</div>
+			</form>
+		</div>
+		<div class="col-3"></div>
+	</div>
+
+</main>
+<script>
+	window.onload = function () {
+		
+		generatePassword('UserPassword');
+	}
+
+	function generatePassword(inputId) {
+		var length = 8,
+			charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+			retVal = "";
+		for (var i = 0, n = charset.length; i < length; ++i) {
+			retVal += charset.charAt(Math.floor(Math.random() * n));
+		}
+		document.getElementById(inputId).value = retVal;
+	}
+</script>

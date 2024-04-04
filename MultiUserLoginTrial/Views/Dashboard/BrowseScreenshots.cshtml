@@ -1,0 +1,61 @@
+﻿@model BrowseScreenshotsViewModel
+<style>
+    .screenshot {
+        max-width: 100%;
+        max-height: 500px;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-2">
+            @Html.Partial("_Sidebar")
+
+        </div>
+        <div class="col-10 p-5 ">
+            <h1>Browse Screenshots</h1>
+
+            @if (!string.IsNullOrEmpty(Model.CurrentPath))
+            {
+                <p>Current path: @Model.CurrentPath</p>
+            }
+
+            <h2>Directories:</h2>
+            <ul>
+                @foreach (var directory in Model.Directories)
+                {
+                    <li>
+                        <a href="@Url.Action("BrowseScreenshots", new { path = directory })">@System.IO.Path.GetFileName(directory)</a>
+                    </li>
+                }
+            </ul>
+
+            <h2>Screenshots:</h2>
+            <div class="container">
+                <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-8">
+                        <ul>
+                            @foreach (var screenshot in Model.Screenshots)
+                            {
+                                <li>
+                                    <img class="screenshot" src="@Url.Action("GetImage", "Dashboard", new { path = screenshot })" alt="Screenshot" />
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="col-2"></div>
+                </div>
+            </div>
+            <ul>
+                @foreach (var screenshot in Model.Screenshots)
+                {
+                    <li>
+                        <img class="screenshot" src="@Url.Action("GetImage", "Dashboard", new { path = screenshot })" alt="Screenshot" />
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,210 @@
+﻿@model MultiUserLoginTrial.ViewModels.DashboardViewModel;
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://kit.fontawesome.com/fdb9ff1fff.js" crossorigin="anonymous"></script>
+	
+<style>
+	.long-content {
+		max-width: 200px; /* Adjust this value as needed */
+		word-wrap: break-word;
+	}
+
+	.container-sm {
+		max-width: 95%;
+	}
+	.container-custom{
+		max-width:35%;
+		margin-left:30px;
+	}
+	
+</style>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-2">
+<!--Sidebar-->
+			@Html.Partial("_Sidebar")
+			<div class="container-fluid border mt-4" style="overflow-y: auto; max-height: 50vh; scrollbar-width:thin; width:280px">
+				<div class="d-flex justify-content-center">
+
+
+					<div class=" p-2 text-primary fw-bold" style="font-size:1.0em">Interested Clients</div>
+
+
+				</div>
+				<table class="table table-bordered" style="overflow: visible;">
+					<thead>
+						<tr>
+							<th scope="col" class="text-center">Emails</th>
+							<th scope="col" class="text-center">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var interested in Model.interests)
+						{
+							<tr>
+								<td class="text-center">@interested.Email</td>
+								<td>
+									<a class="btn btn-primary" href="mailto:@interested.Email"><i class="fa-regular fa-envelope"></i></a>
+									<a class="btn btn-danger mt-2" asp-controller="Dashboard" asp-action="DeleteClientEmail" asp-route-id="@interested.Id"><i class="fa-regular fa-trash-can"></i></a>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		</div> <!--col 2 clsoing-->
+<!--Main Content-->
+<div class="col-10">
+
+
+			<div class="container-sm border mt-4" style="overflow-y: auto; max-height: 50vh; scrollbar-width:thin;">
+
+			<div class="d-flex justify-content-between">
+			
+
+				<div class="p-2"><a class="btn btn-primary" asp-action="AddAdmin" asp-controller="Dashboard">Add Organization</a></div>
+				<div class=" p-2 text-primary fw-bold" style="font-size:1.4em">Organization Data</div>
+
+				<div class="p-2"><a class="btn btn-primary" href="@Url.Action("ExportToExcelofAdmins", "Dashboard")">Export to Excel</a> </div>
+				
+			</div>
+			
+			<table class="table table-bordered" style="overflow: visible">
+				<thead>
+					<tr class="fw-bold">
+						<th scope="col" class="text-center">#</th>
+						<th scope="col" class="text-center">Organization Name</th>
+						<th scope="col" class="text-center">Admin Name</th>
+						<th scope="col" class="text-center">Admin Email</th>
+						
+						<th scope="col" class="text-center">Admin City</th>
+						<th scope="col" class="text-center">Admin IsActive</th>
+						<th scope="col" class="text-center">Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var data in Model.admins)
+					{
+						<tr style="font-size:1.1em">
+							<td class="text-center">@data.AId</td>
+							<td class="text-center">@data.OrganizationName</td>
+							<td class="text-center">@data.AdminName</td>
+							<td class="text-center">@data.AdminEmail</td>
+
+							<td class="text-center">@data.AdminCity</td>
+							<td class="text-center">@data.IsActive</td>
+							<td>
+								<a class="btn btn-warning" style="margin-top:10px ; margin-left:10px; Width:75px" asp-controller="Dashboard" asp-action="EditAdmin" asp-route-id="@data.AId"><i class="fa-solid fa-pencil"></i>Edit</a>
+								<a class="btn btn-danger" style="margin-top:10px ; margin-left:10px; Width:85px" asp-controller="Dashboard" asp-action="DeleteAdmin" asp-route-id="@data.AId"><i class="fa-regular fa-trash-can"></i><br />Delete</a>
+								<div class="dropdown position-static">
+									<button class="btn btn-info dropdown-toggle" style="margin-top:10px ; margin-left:10px; Width:170px" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<i class="fa-solid fa-download">&nbsp; &nbsp;Download</i>
+									</button>
+									<div class="dropdown-menu position-absolute" aria-labelledby="dropdownMenuButton">
+										<a class="dropdown-item"  asp-controller="Dashboard" asp-action="DownloadData" asp-route-email="@data.AdminEmail" asp-route-dataType="Urls">URLs</a>
+										<a class="dropdown-item"  asp-controller="Dashboard" asp-action="DownloadData" asp-route-email="@data.AdminEmail" asp-route-dataType="TotalHours">Total Hours</a>
+										<a class="dropdown-item"  asp-controller="Dashboard" asp-action="DownloadData" asp-route-email="@data.AdminEmail" asp-route-dataType="Screenshots">Screenshots</a>
+									</div>
+								</div>
+
+
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+
+			
+		</div>
+
+
+			<div class="container-sm border mt-4" style="overflow-y: auto; max-height: 50vh;scrollbar-width:thin;">
+
+			<div class="d-flex justify-content-between">
+
+
+@* 				<div class="p-2"><a class="btn btn-primary" asp-action="AddUser" asp-controller="Dashboard" hidden>Add User</a></div>
+ *@				<div class=" p-2 text-primary fw-bold" style="font-size:1.4em">Employee Data</div>
+
+				<div class="p-2"><a class="btn btn-primary" href="@Url.Action("ExportToExcelofUsers", "Dashboard")">Export to Excel</a> </div>
+
+			</div>
+
+			<table class="table table-bordered" style="overflow: visible">
+				<thead>
+					<tr class="fw-bold">
+						<th scope="col" class="text-center">#</th>
+						<th scope="col" class="text-center">Employee Name</th>
+						<th scope="col" class="text-center">Employee Designation</th>
+						<th scope="col" class="text-center">Employee Email</th>
+
+						<th scope="col" class="text-center">Employee City</th>
+						<th scope="col" class="text-center">Admin IsActive</th>
+@* 						<th scope="col" class="text-center">Action</th>
+ *@					</tr>
+				</thead>
+				<tbody>
+					@foreach (var data in Model.users)
+					{
+						<tr style="font-size:1.1em">
+							<td class="text-center">@data.UId</td>
+							<td class="text-center">@data.UserName</td>
+							<td class="text-center">@data.UserDesignation</td>
+							<td class="text-center">@data.UserEmail</td>
+
+							<td class="text-center">@data.UserCity</td>
+							<td class="text-center">@data.IsActive</td>
+							@* <td>
+								<a class="btn btn-warning" style="margin-top:10px ; margin-left:10px; Width:75px" asp-controller="Dashboard" asp-action="EditUser" asp-route-id="@data.UId"><i class="fa-solid fa-pencil"></i>Edit</a>
+								<a class="btn btn-danger" style="margin-top:10px ; margin-left:10px; Width:85px" asp-controller="Dashboard" asp-action="DeleteUser" asp-route-id="@data.UId"><i class="fa-regular fa-trash-can"></i><br />Delete</a>
+								<div class="dropdown position-static">
+									<button class="btn btn-info dropdown-toggle" style="margin-top:10px ; margin-left:10px; Width:170px" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<i class="fa-solid fa-download">&nbsp; &nbsp;Download</i>
+									</button>
+									<div class="dropdown-menu position-absolute" aria-labelledby="dropdownMenuButton">
+										<a class="dropdown-item" asp-controller="Dashboard" asp-action="DownloadData" asp-route-email="@data.UserEmail" asp-route-dataType="Urls">URLs</a>
+										<a class="dropdown-item" asp-controller="Dashboard" asp-action="DownloadData" asp-route-email="@data.UserEmail" asp-route-dataType="TotalHours">Total Hours</a>
+										<a class="dropdown-item" asp-controller="Dashboard" asp-action="DownloadData" asp-route-email="@data.UserEmail" asp-route-dataType="Screenshots">Screenshots</a>
+									</div>
+								</div>
+
+
+							</td> *@
+						</tr>
+					}
+				</tbody>
+			</table>
+
+
+		</div>
+</div>
+</div> <!--col-->
+</div><!--row-->
+<!--container-->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Add Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+
+
+<script>
+	$(document).ready(function () {
+		var successMessage = '@TempData["SuccessMessage"]';
+		var errorMessage = '@TempData["ErrorMessage"]';
+		console.log('Success message:', successMessage);
+		console.log('Error message:', errorMessage);
+		if (successMessage) {
+			toastr.success(successMessage);
+		}
+
+		if (errorMessage) {
+			toastr.error(errorMessage);
+		}
+	});
+</script>

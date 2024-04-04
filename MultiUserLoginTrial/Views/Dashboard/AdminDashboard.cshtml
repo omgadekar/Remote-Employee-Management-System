@@ -1,0 +1,107 @@
+﻿@model List<Users>
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<style>
+    .long-content {
+        max-width: 200px; /* Adjust this value as needed */
+        word-wrap: break-word;
+    }
+
+	.container-sm {
+		max-width: 95%;
+	}
+</style>
+<main class="container-fluid">
+	<div class="row">
+		<div class="col-2">
+			@Html.Partial("_Sidebar")
+
+		</div>
+		<div class="col-10">
+			<div class="container-sm border mt-4" style="overflow-y: auto; max-height: 100%; scrollbar-width:thin;">
+
+			<div class="d-flex justify-content-between">
+
+
+				<div class="p-2"><a class="btn btn-primary" asp-action="AddUser" asp-controller="Dashboard">Add User</a></div>
+				<div class=" p-2 text-primary fw-bold" style="font-size:1.4em">Employee Data</div>
+
+				<div class="p-2"><a class="btn btn-primary" href="@Url.Action("ExportToExcelofUsers", "Dashboard")">Export to Excel</a> </div>
+
+			</div>
+
+			<table class="table table-bordered" style="overflow: visible">
+				<thead>
+					<tr class="fw-bold">
+						<th scope="col" class="text-center">#</th>
+						<th scope="col" class="text-center">Employee Name</th>
+						<th scope="col" class="text-center">Employee Designation</th>
+						<th scope="col" class="text-center">Employee Email</th>
+
+						<th scope="col" class="text-center">Employee City</th>
+						<th scope="col" class="text-center">Employee IsActive</th>
+						<th scope="col" class="text-center">Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var data in Model)
+					{
+						<tr style="font-size:1.1em">
+							<td class="text-center">@data.UId</td>
+							<td class="text-center">@data.UserName</td>
+							<td class="text-center">@data.UserDesignation</td>
+							<td class="text-center">@data.UserEmail</td>
+
+							<td class="text-center">@data.UserCity</td>
+							<td class="text-center">@data.IsActive</td>
+							<td>
+								<a class="btn btn-warning" style="margin-top:10px ; margin-left:10px; Width:75px" asp-controller="Dashboard" asp-action="EditUser" asp-route-id="@data.UId"><i class="fa-solid fa-pencil"></i>Edit</a>
+								<a class="btn btn-danger" style="margin-top:10px ; margin-left:10px; Width:85px" asp-controller="Dashboard" asp-action="DeleteUser" asp-route-id="@data.UId"><i class="fa-regular fa-trash-can"></i><br />Delete</a>
+								<div class="dropdown position-static">
+									<button class="btn btn-info dropdown-toggle" style="margin-top:10px ; margin-left:10px; Width:170px" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+										<i class="fa-solid fa-download">&nbsp; &nbsp;Download</i>
+									</button>
+									<div class="dropdown-menu position-absolute" aria-labelledby="dropdownMenuButton">
+											<a class="dropdown-item" asp-controller="Dashboard" asp-action="DownloadUserData" asp-route-userEmail="@data.UserEmail" asp-route-id="@data.UId" asp-route-dataType="Urls">URLs</a>
+											<a class="dropdown-item" asp-controller="Dashboard" asp-action="DownloadUserData" asp-route-userEmail="@data.UserEmail" asp-route-id="@data.UId" asp-route-dataType="TotalHours">Total Hours</a>
+											<a class="dropdown-item" asp-controller="Dashboard" asp-action="DownloadUserData" asp-route-userEmail="@data.UserEmail" asp-route-id="@data.UId" asp-route-dataType="Screenshots">Screenshots</a>
+									</div>
+								</div>
+
+
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+
+
+		</div>
+
+	</div>
+	</div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Add Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script>
+	$(document).ready(function() {
+		var successMessage = '@TempData["SuccessMessage"]';
+		var errorMessage = '@TempData["ErrorMessage"]';
+		console.log('Success message:', successMessage);
+		console.log('Error message:', errorMessage);
+		if (successMessage) {
+			toastr.success(successMessage);
+		}
+		if (errorMessage) {
+			toastr.error(errorMessage);
+		}
+	});
+</script>

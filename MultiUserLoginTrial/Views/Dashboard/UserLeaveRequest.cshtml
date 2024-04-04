@@ -1,0 +1,79 @@
+﻿@model MultiUserLoginTrial.ViewModels.LeaveViewModel;
+
+<style>
+	.long-content {
+		max-width: 200px; /* Adjust this value as needed */
+		word-wrap: break-word;
+	}
+
+	.container-sm {
+		max-width: 95%;
+	}
+</style>
+<main class="container-fluid">
+	<div class="row">
+		<div class="col-2">
+			@Html.Partial("_UserSidebar")
+
+		</div>
+		<div class="col-8">
+			<div class="container-sm">
+				<div class="d-flex justify-content-center mt-3">
+					<h2 class="text-primary"><b>Leave Request</b></h2>
+				</div>
+
+				<div class="d-flex justify-content-center">
+					<h5 class="text-primary">(Clearly state your reason for a leave)</h5>
+				</div>
+				<div class="d-flex justify-content-center mt-2 ">
+					<form style="width: 26rem;" method="post">
+						<!-- Name input -->
+						<div data-mdb-input-init class="form-outline mb-4">
+							<input type="text" id="form4Example1" class="form-control" asp-for="@Model.leaves.leaveMessageHeading" />
+							<label class="form-label" for="form4Example1">Subject</label>
+						</div>
+
+						<!-- Message input -->
+						<div data-mdb-input-init class="form-outline mb-4">
+							<textarea class="form-control" id="form4Example3" rows="4" asp-for="@Model.leaves.leaveMessageBody"></textarea>
+							<label class="form-label" for="form4Example3">Message</label>
+						</div>
+
+						<!-- Submit button -->
+						<button data-mdb-ripple-init type="submit" class="btn btn-primary btn-block mb-4">Send</button>
+					</form>
+				</div>
+			</div>
+			<div class="container-sm">
+				<div class="row mt-4 p-3 d-flex justify-content-center">
+					@foreach (var data in Model.LeavesList)
+					{
+						<div class="col-md-4 mb-4">
+							<div class="card" style="width: 18rem;">
+								<div class="card-body">
+									<h5 class="card-title">@data.leaveMessageHeading</h5>
+									<h6 class="card-subtitle mb-2 text-muted">@data.DateTime.ToString(@"hh\:mm\:ss")</h6>
+									@if (data.leaveStatus == "0")
+									{
+										<h6 class="card-subtitle mb-2 text-muted">Leave Status : <i class="fa-solid fa-x " style="color:red"></i></h6>
+									}
+									else if (data.leaveStatus == "1")
+									{
+										<h6 class="card-subtitle mb-2 text-muted">Leave Status : <i class="fa-solid fa-check" style="color:forestgreen"></i></h6>
+									}
+									<p class="card-text">@data.leaveMessageBody</p>
+									<p class="card-text">@data.leaveStatusMessage</p>
+									<a class="text-danger" asp-action="Userdeleteleave" asp-controller="Dashboard" asp-route-id="@data.leaveId">Delete</a>
+								</div>
+							</div>
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+		<div class="col-2">
+			@Html.Partial("TrackedPage")
+
+		</div>
+	</div>
+</main>

@@ -1,0 +1,113 @@
+﻿@model MultiUserLoginTrial.ViewModels.StatDataSuperAdmin
+@{
+    var org_name = Model.OrganizationNames;
+
+    HashSet<(string, int)> finalset = new HashSet<(string,int)>();
+    foreach (var name in org_name) {
+        int flag = 0;
+        foreach (var (org, cnt) in Model.OrganizationAndNumOfUsers)
+        {
+            if (name == org)
+            {
+                finalset.Add(new(name, cnt));
+                flag=1;
+                break;
+            }
+        }
+        if(flag==0)
+            finalset.Add(new(name, 0));
+    }
+    List<string> keys = new List<string>();
+    List<int> values = new List<int>();
+    foreach (var (key, value) in finalset)
+    {
+        keys.Add(key);
+        values.Add(value);
+    }
+}
+<style>
+    .container-sm {
+        max-width: 95%;
+    }
+</style>
+<div class="container-fluid">
+   
+    <div class="row">
+        <div class="col-2">
+            @Html.Partial("_Sidebar")
+        </div>
+        <div class="col-10">
+            <div class="d-flex justify-content-center mt-4">
+                <h3 class="text-primary"><u>Statistical Data</u></h3>
+            </div>
+            <div class="mt-4" style="margin-left:50px;margin-right:50px">
+                <h4>Organization Data:</h4>
+                <ul style="list-style-type: none; display: flex; flex-wrap: wrap; justify-content: space-between;">
+                    @foreach (var (orgName, numOfUsers) in finalset)
+                    {
+                        <li style="margin-right: 10px;"><b>@orgName:<span class="text-primary"> @numOfUsers</span></b></li>
+                    }
+                </ul>
+            </div>
+            <div class="mt-5">
+              
+                    <div>
+                    <canvas width="600" height="400" id="myChart"></canvas>
+
+                    </div>
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    function getRandomColor(existingColors) {
+        var color, isTooClose;
+        do {
+            color = 'rgba(' +
+                Math.floor(Math.random() * 256) + ', ' +
+                Math.floor(Math.random() * 256) + ', ' +
+                Math.floor(Math.random() * 256) + ', 0.2)';
+            isTooClose = existingColors.some(function (existingColor) {
+                var colorParts = color.match(/\d+/g).map(Number);
+                var existingColorParts = existingColor.match(/\d+/g).map(Number);
+                var diffR = Math.abs(colorParts[0] - existingColorParts[0]);
+                var diffG = Math.abs(colorParts[1] - existingColorParts[1]);
+                var diffB = Math.abs(colorParts[2] - existingColorParts[2]);
+                return (diffR + diffG + diffB) < 100;  // Adjust this value to your liking
+            });
+        } while (isTooClose);
+        return color;
+    }
+
+    var backgroundColors = [];
+    var borderColors = [];
+    for (var i = 0; i < @finalset.Count; i++) {
+        var color = getRandomColor(backgroundColors);
+        backgroundColors.push(color);
+        borderColors.push(color.replace('0.2', '1'));
+    }
+
+    var myChart = new Chart(ctx, {
+        type: 'pie', // Change this line
+        data: {
+            labels: @Html.Raw(Json.Serialize(keys)),
+            datasets: [{
+                label: '# of Employees',
+                data: @Html.Raw(Json.Serialize(values)),
+                 backgroundColor: backgroundColors,
+                borderColor: borderColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+</script>
