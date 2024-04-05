@@ -31,8 +31,8 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Designation</th>
-                                    <th>City</th>
                                     <th>Email</th>
+                                    <th>Duration</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -42,6 +42,7 @@
                                     <tr>
                                         <td>@employee.UserName</td>
                                         <td>@employee.UserDesgination</td>
+            
                                         <td>@employee.UserEmail</td>
                                         <td>@TimeSpan.FromMilliseconds(Convert.ToInt64(employee.elapsedTime)).ToString(@"hh\:mm\:ss")</td>
                                     </tr>

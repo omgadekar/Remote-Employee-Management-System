@@ -95,6 +95,7 @@
 	$(document).ready(function() {
 		var successMessage = '@TempData["SuccessMessage"]';
 		var errorMessage = '@TempData["ErrorMessage"]';
+		var screenshotmessage = '@TempData["NoScreenshots"]';
 		console.log('Success message:', successMessage);
 		console.log('Error message:', errorMessage);
 		if (successMessage) {
@@ -102,6 +103,9 @@
 		}
 		if (errorMessage) {
 			toastr.error(errorMessage);
+		}
+		if (screenshotmessage) {
+			toastr.error(screenshotmessage);
 		}
 	});
 </script>

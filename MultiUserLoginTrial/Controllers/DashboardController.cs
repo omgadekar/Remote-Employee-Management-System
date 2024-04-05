@@ -71,8 +71,7 @@ namespace MultiUserLoginTrial.Controllers
 
 
         //To Display AdminDashBoard with List of all the users
-        [Route("DisplayAllAdmins")]
-        [Route("AdminList")]
+   
         public IActionResult AdminDashboard()
         {
             int adminID = HttpContext.Session.GetInt32("_AdminID") ?? 0;
@@ -825,38 +824,46 @@ namespace MultiUserLoginTrial.Controllers
 
         public IActionResult BrowseScreenshots(string path)
         {
-            // Get the user's role and email from the session
-            var role = HttpContext.Session.GetString("Role");
-            var email = HttpContext.Session.GetString("Email");
-
-            // Start from the base folder if no path is provided
-            if (string.IsNullOrEmpty(path))
+            try
             {
-                if (role == "SuperAdmin")
+                // Get the user's role and email from the session
+                var role = HttpContext.Session.GetString("Role");
+                var email = HttpContext.Session.GetString("Email");
+
+                // Start from the base folder if no path is provided
+                if (string.IsNullOrEmpty(path))
                 {
-                    path = @"C:\ScreenshortFile\";
+                    if (role == "SuperAdmin")
+                    {
+                        path = @"C:\ScreenshortFile\";
+                    }
+                    else if (role == "Admin" && email != null)
+                    {
+                        path = Path.Combine(@"C:\ScreenshortFile\", email);
+                    }
                 }
-                else if (role == "Admin" && email != null)
+
+                // Get all directories in the current path
+                var directories = Directory.GetDirectories(path);
+
+                // Get all screenshots in the current path
+                var screenshots = Directory.GetFiles(path, "*.png");
+
+                // Create a model to pass to the view
+                var model = new BrowseScreenshotsViewModel
                 {
-                    path = Path.Combine(@"C:\ScreenshortFile\", email);
-                }
+                    CurrentPath = role == "SuperAdmin" ? path : null,
+                    Directories = directories,
+                    Screenshots = screenshots
+                };
+
+                return View(model);
             }
-
-            // Get all directories in the current path
-            var directories = Directory.GetDirectories(path);
-
-            // Get all screenshots in the current path
-            var screenshots = Directory.GetFiles(path, "*.png");
-
-            // Create a model to pass to the view
-            var model = new BrowseScreenshotsViewModel
+            catch(Exception  ex)
             {
-                CurrentPath = role == "SuperAdmin" ? path : null,
-                Directories = directories,
-                Screenshots = screenshots
-            };
-
-            return View(model);
+                TempData["NoScreenshots"] = "No Data Found";
+                return RedirectToAction("AdminDashboard", "Dashboard");
+            }
         }
         public IActionResult GetImage(string path)
         {

@@ -37,7 +37,7 @@ namespace MultiUserLoginTrial.Service
             string subject = "Your Account is Successfully Created!";
 
             string body = $"<br/>Dear {username},<br/><br/>We are excited to inform you that your account has been successfully created.<br/>" +
-                $"Below are your login credentials:<br/><br/>Username: {username}<br/>Password: {password}<br/><br/>" +
+                $"Below are your login credentials:<br/><br/>Username: {email}<br/>Password: {password}<br/><br/>" +
                 $"You can log in using the following link:<br/><a href='{loginUrl}'>{loginUrl}</a>";
 
             var smtp = new SmtpClient
