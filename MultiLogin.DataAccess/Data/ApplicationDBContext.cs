@@ -20,11 +20,11 @@ namespace MultiUserLoginTrial.DataAccess.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SuperAdmin>().HasData(
-                new SuperAdmin { SId = 1, SuperAdminEmail = "Sumago@gmail.com", SuperAdminPassword = "Sumago@123" }
+                new SuperAdmin { SId = 1, SuperAdminEmail = "admin@gmail.com", SuperAdminPassword = "admin@123" }
             );
 
             modelBuilder.Entity<Roles>().HasData(
-                new Roles { Emails = "Sumago@gmail.com", Role = "SuperAdmin" }
+                new Roles { Emails = "admin@gmail.com", Role = "SuperAdmin" }
             );
 
 
