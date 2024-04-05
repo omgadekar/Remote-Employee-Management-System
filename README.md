@@ -37,7 +37,8 @@ To run the code on your local machine, follow these steps:
 4. Install the provided fonts for optimal display.
 5. If you wish to utilize URL functionality, extract the provided ZIP files for browser extensions and install them via developer options.
 6. Run the code and explore the functionalities of the system.
-
+Admin Login Credentials- email address: admin@gmail.com
+password: admin@123
 ---
 
 Feel free to contribute to this project by forking the repository and submitting pull requests. If you encounter any issues or have suggestions for improvement, please don't hesitate to raise them in the 'Issues' section. Thank you for your interest in our Remote Employee Management System! 🙌
