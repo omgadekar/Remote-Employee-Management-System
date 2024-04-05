@@ -38,7 +38,7 @@
 
                                     <h6 class="card-title">Subject: @data.leaveMessageHeading</h6>
                                     <p class="card-text"> @data.leaveMessageBody</p>
-                                    @if(data.leaveStatus=="0"){
+                                    @if(data.leaveStatus=="0"  && (string.IsNullOrEmpty(data.leaveStatusMessage))){
                                         <input class="form-check-input" type="checkbox" value="1" name="status">
                                         <label class="form-check-label" for="flexCheckDefault">
                                             Approve Leave

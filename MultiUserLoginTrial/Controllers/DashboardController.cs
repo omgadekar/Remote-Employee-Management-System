@@ -1096,6 +1096,7 @@ namespace MultiUserLoginTrial.Controllers
             var leavedata = DbContext.Leaves.Find(id);
             if (leavedata == null) { } else {
                 leavedata.leaveStatusMessage = message;
+                if(status is null) { status = "0"; }
                 leavedata.leaveStatus = status;
               //  DbContext.Leaves.Add(leavedata);
                 DbContext.SaveChanges();
