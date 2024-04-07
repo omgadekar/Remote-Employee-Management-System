@@ -559,13 +559,15 @@ namespace MultiUserLoginTrial.Controllers
                     DateTime loginTime = Convert.ToDateTime(HttpContext.Session.GetString("LoginTime"));
                     DateTime logoutTime = DateTime.Now;
                     DateTime dateOnly = logoutTime.Date;
+                    var userdata = DbContext.Users.Find(StoredUserID);
                     var timesheetdata = new UserTime
                     {
                         UserId = StoredUserID,
                         LoginTime = loginTime,
                         LogoutTime = logoutTime,
                         Duration = displayTime,
-                        Date = dateOnly
+                        Date = dateOnly,
+                        AdminId = userdata.AId
                     };
                     DbContext.UserTime.Add(timesheetdata);
                     DbContext.SaveChanges();
