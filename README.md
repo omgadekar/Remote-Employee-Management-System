@@ -40,8 +40,8 @@ To run the code on your local machine, follow these steps:
 Admin Login Credentials- email address: admin@gmail.com
 password: admin@123
 
-## DEMO Video
-https://youtu.be/9bJLD46-fxo
+## Demo Video 🎥
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/9bJLD46-fxo/0.jpg)](https://www.youtube.com/watch?v=9bJLD46-fxo)
 
 ---
 
