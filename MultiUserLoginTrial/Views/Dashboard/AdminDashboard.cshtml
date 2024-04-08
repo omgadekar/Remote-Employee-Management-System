@@ -96,6 +96,7 @@
 		var successMessage = '@TempData["SuccessMessage"]';
 		var errorMessage = '@TempData["ErrorMessage"]';
 		var screenshotmessage = '@TempData["NoScreenshots"]';
+		var nodata = '@TempData["NoDataToDownload"]';
 		console.log('Success message:', successMessage);
 		console.log('Error message:', errorMessage);
 		if (successMessage) {
@@ -106,6 +107,10 @@
 		}
 		if (screenshotmessage) {
 			toastr.error(screenshotmessage);
+		}
+		if (nodata) {
+			toastr.error(nodata);
+
 		}
 	});
 </script>

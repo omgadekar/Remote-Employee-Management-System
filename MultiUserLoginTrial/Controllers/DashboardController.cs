@@ -760,7 +760,8 @@ namespace MultiUserLoginTrial.Controllers
             // Check if the user's folder exists
             if (!Directory.Exists(userFolder))
             {
-                return NotFound();
+                TempData["NoDataToDownload"] = "No Data for that Employee";
+                return RedirectToAction("AdminDashboard","Dashboard");
             }
 
             // Create a zip file of the data folder
