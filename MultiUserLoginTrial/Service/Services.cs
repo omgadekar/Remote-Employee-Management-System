@@ -31,9 +31,9 @@ namespace MultiUserLoginTrial.Service
         {
             var loginUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host.Value}/Login/Login";
 
-            var fromEmail = new MailAddress("gadekaromus@gmail.com", "Login");
+            var fromEmail = new MailAddress("YOUR_OWN_EMAIL", "Login");
             var toEmail = new MailAddress(email);
-            var fromEmailPassword = "wwtjmxjgbgjtspxu";
+            var fromEmailPassword = "API_PASSKEY";
             string subject = "Your Account is Successfully Created!";
 
             string body = $"<br/>Dear {username},<br/><br/>We are excited to inform you that your account has been successfully created.<br/>" +
