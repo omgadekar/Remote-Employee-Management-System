@@ -90,8 +90,12 @@ namespace MultiUserLoginTrial.Controllers
         public IActionResult AddUser(Users viewModel)
         {
             int adminID = HttpContext.Session.GetInt32("_AdminID") ?? 0;
-
-            var user = new Users
+			var checkifexisits = DbContext.Users.FirstOrDefault(u => u.UserEmail == viewModel.UserEmail);
+			if (checkifexisits != null) {
+				TempData["checkifexisits"] = "User Already Exisits";
+				return RedirectToAction("AdminDashboard");
+			}
+			var user = new Users
             {
                 UserEmail = viewModel.UserEmail,
                 UserDesignation = viewModel.UserDesignation,
@@ -267,7 +271,13 @@ namespace MultiUserLoginTrial.Controllers
         [HttpPost]
         public IActionResult AddAdmin(Admin viewModel)
         {
-            var admins = new Admin
+			var checkifexisits = DbContext.Admin.FirstOrDefault(u => u.AdminEmail == viewModel.AdminEmail);
+			if (checkifexisits != null)
+			{
+				TempData["checkifexisits"] = "Admin Already Exisits";
+				return RedirectToAction("SuperAdminDashboard");
+			}
+			var admins = new Admin
             {
                 AdminEmail = viewModel.AdminEmail,
                 AdminPassword = viewModel.AdminPassword,

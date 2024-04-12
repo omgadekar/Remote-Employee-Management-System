@@ -101,32 +101,35 @@ namespace MultiUserLoginTrial.Controllers
 						if (user != null)
 						{
 							var passwordHasher = new PasswordHasher<Users>();
-							if (passwordHasher.VerifyHashedPassword(user, user.UserPassword, enteredPassword) == PasswordVerificationResult.Success)
+							if (passwordHasher.VerifyHashedPassword(user, user.UserPassword, enteredPassword) == PasswordVerificationResult.Success && user.IsActive != 0)
 							{
-								UserID = user.UId;
-								HttpContext.Session.SetInt32(SessionUserId, UserID);
-								HttpContext.Session.SetString(SessionUserTime, time.ToString());
-								HttpContext.Session.SetString("Role", role.Role);
-								HttpContext.Session.SetString("Email", enteredEmail);
-								HttpContext.Session.SetString("Name", user.UserName);
-								DateTime logintime = DateTime.Now;
-								HttpContext.Session.SetString("LoginTime", logintime.ToString());
-								var cts = new CancellationTokenSource();
-								var guid = Guid.NewGuid();
-								TokenSources[guid] = cts;
-								HttpContext.Session.SetString("TaskToken", guid.ToString());
+								
+									UserID = user.UId;
+									HttpContext.Session.SetInt32(SessionUserId, UserID);
+									HttpContext.Session.SetString(SessionUserTime, time.ToString());
+									HttpContext.Session.SetString("Role", role.Role);
+									HttpContext.Session.SetString("Email", enteredEmail);
+									HttpContext.Session.SetString("Name", user.UserName);
+									DateTime logintime = DateTime.Now;
+									HttpContext.Session.SetString("LoginTime", logintime.ToString());
+									var cts = new CancellationTokenSource();
+									var guid = Guid.NewGuid();
+									TokenSources[guid] = cts;
+									HttpContext.Session.SetString("TaskToken", guid.ToString());
 
-								Listener = new HttpListener();
-								Listener.Prefixes.Add("http://localhost:5000/");
-								Task.Run(() => CaptureUrls(UserID, cts.Token, Listener));
+									Listener = new HttpListener();
+									Listener.Prefixes.Add("http://localhost:5000/");
+									Task.Run(() => CaptureUrls(UserID, cts.Token, Listener));
 
-								CancellationTokenSource = new CancellationTokenSource();
-								Task.Run(() => CaptureScreenshotsPeriodically(UserID, CancellationTokenSource.Token));
-								return RedirectToAction("UserDashboard", "Dashboard");
+									CancellationTokenSource = new CancellationTokenSource();
+									Task.Run(() => CaptureScreenshotsPeriodically(UserID, CancellationTokenSource.Token));
+									return RedirectToAction("UserDashboard", "Dashboard");
+								
 							}
 							else
 							{
 								ViewBag.Error = "INVALID CREDENTIALS";
+
 							}
 						}
 						break;
@@ -135,7 +138,7 @@ namespace MultiUserLoginTrial.Controllers
 						if (admin != null)
 						{
 							var passwordHasher = new PasswordHasher<Admin>();
-							if (passwordHasher.VerifyHashedPassword(admin, admin.AdminPassword, enteredPassword) == PasswordVerificationResult.Success)
+							if (passwordHasher.VerifyHashedPassword(admin, admin.AdminPassword, enteredPassword) == PasswordVerificationResult.Success && admin.IsActive != 0)
 							{
 								HttpContext.Session.SetInt32(SessionAdminId, admin.AId);
 								HttpContext.Session.SetString(SessionAdminTime, time.ToString());

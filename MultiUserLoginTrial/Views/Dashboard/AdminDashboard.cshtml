@@ -97,6 +97,7 @@
 		var errorMessage = '@TempData["ErrorMessage"]';
 		var screenshotmessage = '@TempData["NoScreenshots"]';
 		var nodata = '@TempData["NoDataToDownload"]';
+		var checkifexisits = '@TempData["checkifexisits"]';
 		console.log('Success message:', successMessage);
 		console.log('Error message:', errorMessage);
 		if (successMessage) {
@@ -111,6 +112,9 @@
 		if (nodata) {
 			toastr.error(nodata);
 
+		}
+		if (checkifexisits) {
+			toastr.error(checkifexisits);
 		}
 	});
 </script>
